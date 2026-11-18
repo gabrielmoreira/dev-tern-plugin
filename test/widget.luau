@@ -84,6 +84,23 @@ test("hover previews all roots from cache with observed workspaces first", funct
 	assert(ok, why)
 end)
 
+test("the hover preview stays short when many workspaces are registered", function()
+	local cx = world()
+	local many = {}
+	for i = 1, 12 do
+		table.insert(many, { name = string.format("ws-%02d", i), path = "/widget-default/ws-" .. i })
+	end
+	local workspaces = Dev.workspaces
+	Dev.workspaces = function(_, done) done({ ok = true, value = many }, nil) end
+	cx.pick = function(_, opts) return { next = function() end } end
+	menu(cx)
+	Dev.workspaces = workspaces
+	local lines = {}
+	for line in string.gmatch(Shim.widgets.dev.render(nil).title, "[^\n]+") do table.insert(lines, line) end
+	assert(#lines == 9, "The hover preview must cap its rows, not list every workspace: " .. #lines .. " lines")
+	assert(lines[9] == "+4 more", "The hover preview must count the hidden workspaces: " .. tostring(lines[9]))
+end)
+
 test("selecting another root's open workspace focuses its existing pane", function()
 	local cx, state = world()
 	cx.pick = function(_, opts)

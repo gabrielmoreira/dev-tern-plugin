@@ -137,14 +137,15 @@ local function enabled(): boolean
 end
 
 local widget_inventory, widget_failures = nil, {}
-local widget_title = "Toggle dev sidebar\nLoading workspaces..."
+local widget_title = "dev"
+local PREVIEW_ROWS = 8
 local function update_widget_preview()
 	if not widget_inventory then return end
 	local presence = Store.match_presence(widget_inventory, S.presence)
 	local names, rows = {}, {}
 	for _, w in widget_inventory do
-		local name = string.lower(w.name)
-		names[name] = (names[name] or 0) + 1
+		local key = string.lower(w.name)
+		names[key] = (names[key] or 0) + 1
 	end
 	for _, w in widget_inventory do
 		table.insert(rows, {
@@ -158,15 +159,19 @@ local function update_widget_preview()
 		if a.name ~= b.name then return a.name < b.name end
 		return a.path < b.path
 	end)
-	local lines = { "Toggle dev sidebar", "", if #widget_failures > 0 then "Workspaces (partial)" else "Workspaces" }
+	-- Rows only: the bar has one dev entry, so a header, a repeat of the click action and a footer
+	-- saying where else to switch just cost lines. The row count stays bounded at any inventory size.
+	local lines, shown = {}, 0
 	for _, row in rows do
+		if shown == PREVIEW_ROWS then break end
+		shown += 1
 		table.insert(lines, (if row.observed then "[open] " else "") .. row.label)
 	end
+	if #rows > shown then table.insert(lines, "+" .. tostring(#rows - shown) .. " more") end
 	if #rows == 0 then
-		table.insert(lines, if #widget_failures > 0 then "Workspace preview unavailable" else "No registered workspaces")
+		table.insert(lines, if #widget_failures > 0 then "Workspaces unavailable" else "No workspaces")
 	end
-	if S.presence and not S.presence.available then table.insert(lines, "Open status unavailable") end
-	table.insert(lines, "\nChoose dev: Workspaces to switch.")
+	if #widget_failures > 0 and #rows > 0 then table.insert(lines, "incomplete") end
 	local title = table.concat(lines, "\n")
 	if title ~= widget_title then
 		widget_title = title
@@ -611,15 +616,7 @@ tern.command({
 	end,
 })
 
-tern.chrome.status(function(pane)
-	local w = Store.locate(S, pane.cwd)
-	if not w then return nil end
-	local health, tone = Store.health(S, w)
-	return {
-		{ text = w.name, icon = "folder", command = "plugin." .. OWNER .. ".here" },
-		{ text = health, icon = "activity", tone = tone, command = "plugin." .. OWNER .. ".check" },
-	}
-end)
+-- The status line carries no dev segment: the widget in the bar is the only dev entry point.
 
 local function open_panel(cx)
 	set_surface(cx, true, true)

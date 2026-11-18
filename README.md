@@ -5,14 +5,14 @@ Browse workspaces, mirrors, files, pull requests and work items from a sidebar, 
 workspaces without leaving your terminal.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="The dev sidebar listing workspaces, with the widget's hover preview" width="640">
+  <img src="docs/screenshot.png" alt="The dev sidebar listing workspaces, mounts and their status" width="415">
 </p>
 
 ## Features
 
 - **Sidebar navigator.** A native block that follows your tabs. Close it with its X and it stays closed.
-- **Status bar widget.** Click to toggle the sidebar. Hover to preview every registered workspace,
-  with the ones open in this window listed first.
+- **Status bar widget.** Click to toggle the sidebar. Hover for a short list of your workspaces,
+  with the ones open in this window first.
 - **Workspace switcher.** `dev: Workspaces` lists workspaces from all registered roots and focuses
   the tab where one is already open instead of opening a duplicate.
 - **Guided actions.** Create workspaces, search mirrors, check remotes and review pull requests
