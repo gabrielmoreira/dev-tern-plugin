@@ -1,0 +1,397 @@
+/* Navigator layout. Colors come only from Tern's theme variables (--l1..--l3 lines, --t1..--t4 text,
+   --accent, --raise), so light, dark and custom themes all follow. Marks (active, keyboard cursor) change
+   background and inset rings only, never padding or borders, so row text does not move when they toggle. */
+
+/* The root is a column: toolbar, filter and alerts are fixed, only the body scrolls. */
+[data-role='devcli.root'] {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0;
+	padding: 8px 8px 0;
+	gap: 0;
+	overflow: hidden;
+}
+
+[data-role='devcli.root'] > :not([data-role='devcli.body']) {
+	flex: none;
+}
+
+[data-role='devcli.body'] {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0;
+	min-height: 0;
+	gap: 4px;
+	margin: 0 -8px;
+	padding: 4px 8px 12px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/* Toolbar */
+[data-role='devcli.header'] {
+	gap: 4px;
+	padding: 0 0 6px;
+}
+
+[data-role='devcli.bar'] {
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	flex-wrap: nowrap;
+}
+
+[data-role='devcli.title'],
+[data-role='devcli.tools'] {
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+}
+
+[data-role='devcli.tools'] {
+	flex: none;
+}
+
+[data-role='devcli.nav'] {
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 2px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid var(--l2);
+}
+
+/* Back row on detail screens */
+[data-role='devcli.crumb'] {
+	align-items: center;
+	gap: 4px;
+	padding: 2px 0 6px;
+	min-width: 0;
+}
+
+[data-role='devcli.crumb-title'] {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Alerts stay in view above the scrolling body; a very tall one never pushes the list away. */
+[data-role='devcli.alerts'] {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-height: 40%;
+	padding: 6px 0 2px;
+	overflow-y: auto;
+}
+
+/* Collection and detail section heads */
+[data-role='devcli.section'] {
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 8px;
+	padding: 0 2px;
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	color: var(--t3);
+}
+
+[data-role='devcli.list'] {
+	gap: 0;
+}
+
+/* Workspace rows: one continuous list, status inline */
+[data-role='devcli.ws'],
+[data-role='devcli.ws-cursor'],
+[data-role='devcli.ws-active'],
+[data-role='devcli.ws-cursor-active'] {
+	padding: 5px 8px;
+	gap: 1px;
+	border-radius: var(--r-ctl, 8px);
+	cursor: pointer;
+	overflow-wrap: anywhere;
+}
+
+[data-role='devcli.ws']:hover,
+[data-role='devcli.ws-cursor']:hover,
+[data-role='devcli.ws-active']:hover,
+[data-role='devcli.ws-cursor-active']:hover,
+[data-role='devcli.mirror']:hover,
+[data-role='devcli.dir']:hover,
+[data-role='devcli.file']:hover {
+	background: var(--l1);
+}
+
+[data-role='devcli.ws-active'],
+[data-role='devcli.ws-cursor-active'] {
+	background: rgb(from var(--accent) r g b / 9%);
+	box-shadow: inset 0 0 0 1px rgb(from var(--accent) r g b / 28%);
+}
+
+[data-role='devcli.ws-cursor'],
+[data-role='devcli.ws-cursor-active'] {
+	box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+[data-role='devcli.ws-cursor'] {
+	background: var(--l1);
+}
+
+[data-role='devcli.ws-top'],
+[data-role='devcli.mirror-top'],
+[data-role='devcli.mirror-sub'] {
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	flex-wrap: nowrap;
+}
+
+[data-role='devcli.ws-name'] {
+	flex: 1 1 0;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Keep presence beside a short name; the name alone shrinks when its title cluster runs out of width. */
+[data-role='devcli.ws-title'] {
+	flex: 1 1 0;
+	min-width: 0;
+	align-items: center;
+	justify-content: flex-start;
+	flex-wrap: nowrap;
+	gap: 4px;
+}
+
+[data-role='devcli.ws-title'] > [data-role='devcli.ws-name'] {
+	flex: 0 1 auto;
+}
+
+[data-role='devcli.ws-top'] > :not([data-role='devcli.ws-title']),
+[data-role='devcli.ws-title'] > :not([data-role='devcli.ws-name']) {
+	flex: 0 0 auto;
+}
+
+[data-role='devcli.ws-presence'],
+[data-role='devcli.ws-presence-unknown'] {
+	min-width: 0;
+	padding: 0 4px;
+	gap: 2px;
+	color: var(--accent);
+}
+
+[data-role='devcli.ws-presence-unknown'] {
+	color: var(--t3);
+}
+
+[data-role='devcli.ws-group'] {
+	padding: 6px 8px 2px;
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	color: var(--t3);
+	cursor: default;
+}
+
+[data-role='devcli.ws-sub'],
+[data-role='devcli.hint'] {
+	font-size: 11px;
+	color: var(--t3);
+}
+
+[data-role='devcli.ws-sub'] {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Mirror rows: name and status over branch and actions */
+[data-role='devcli.mirror'] {
+	gap: 0;
+	padding: 4px 8px;
+	border-radius: var(--r-ctl, 8px);
+}
+
+[data-role='devcli.mirror-main'] {
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+[data-role='devcli.mirror-sub'] [data-role='devcli.tools'] {
+	gap: 0;
+}
+
+[data-role='devcli.pr'] {
+	padding: 6px 8px;
+	gap: 2px;
+	border-radius: var(--r-ctl, 8px);
+}
+
+[data-role='devcli.pr']:hover {
+	background: var(--l1);
+}
+
+[data-role='devcli.actions'] {
+	flex-wrap: wrap;
+	gap: 4px;
+}
+
+[data-role='devcli.desc'] {
+	align-items: center;
+	justify-content: space-between;
+	gap: 4px;
+	min-width: 0;
+}
+
+[data-role='devcli.path'] {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 11px;
+}
+
+/* Pager */
+[data-role='devcli.pager'] {
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	padding: 6px 0 0;
+}
+
+[data-role='devcli.pager-count'] {
+	font-size: 11px;
+	color: var(--t3);
+	white-space: nowrap;
+}
+
+/* Rendered ws.md */
+[data-role='devcli.notes'] {
+	padding: 0 0 0 8px;
+	border-left: 2px solid var(--l2);
+	font-size: 12px;
+	overflow-wrap: anywhere;
+}
+
+/* Lazy file tree (workspace files and mirror code) */
+[data-role='devcli.tree'] {
+	gap: 0;
+}
+
+[data-role='devcli.tree-kids'] {
+	gap: 0;
+	margin-left: 9px;
+	padding-left: 4px;
+	border-left: 1px solid var(--l2);
+}
+
+[data-role='devcli.dir'],
+[data-role='devcli.file'] {
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 2px;
+	min-height: 22px;
+	padding: 1px 6px;
+	border-radius: var(--r-chip, 6px);
+	cursor: pointer;
+}
+
+[data-role='devcli.chev'] {
+	flex: none;
+	width: 12px;
+	text-align: center;
+	color: var(--t3);
+	font-size: 10px;
+}
+
+[data-role='devcli.file-name'] {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 12px;
+}
+
+/* Rows reused by the host's overlays (settings, doctor) and plan/notice banners */
+[data-role='devcli.plan-row'] {
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+}
+
+[data-role='devcli.notice'] {
+	align-items: center;
+	justify-content: space-between;
+	padding: 4px 8px;
+	border-radius: var(--r-chip, 6px);
+	background: rgb(from var(--accent) r g b / 6%);
+}
+
+[data-role='devcli.form'] {
+	gap: 8px;
+}
+
+[data-role='devcli.field'] {
+	gap: 2px;
+}
+
+[data-role='devcli.choices'] {
+	flex-wrap: wrap;
+	gap: 4px 12px;
+}
+
+[data-role='devcli.dock'] {
+	padding: 4px 8px;
+	border-top: 1px solid var(--l2);
+	font-size: 11px;
+	color: var(--t3);
+}
+
+/* Fixed workspace chrome; notes never displace it. */
+[data-role='devcli.workspace-actions'],
+[data-role='devcli.workspace-tabs'] {
+	flex: none;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px;
+	padding: 4px 0 8px;
+}
+
+[data-role='devcli.workspace-tabs'] {
+	border-bottom: 1px solid var(--l2);
+	margin-bottom: 6px;
+}
+
+/* Paint the actual native sheet, not its layer region or modal backdrop. */
+.sf-overlay[data-role='devcli.dialog'] .sf-ov-card {
+	background: var(--card);
+	backdrop-filter: none;
+}
+
+[data-role='devcli.dialog-head'] {
+	flex: none;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--l2);
+}
+
+/* Workset cards and choices share the navigator's compact, theme-aware rows. */
+[data-role='devcli.workset'],
+[data-role='devcli.selection-row'] {
+	padding: 8px 2px;
+	gap: 4px;
+	border-bottom: 1px solid var(--l1);
+}
+
+[data-role='devcli.workset-top'] {
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px;
+}

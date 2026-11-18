@@ -1,0 +1,19 @@
+schema = 1
+id = "devcli"
+name = "dev"
+version = "0.4.1"
+description = "Native workspace recipes, searchable repository selection, reviewed creation, mirrors, files and pull requests."
+icon = "layers"
+host = "host.luau"
+window = "window.luau"
+styles = ["devcli.css"]
+[[lenses]]
+id = "dev"
+match = ["dev ls", "dev ls *", "dev ws status", "dev ws status *"]
+
+
+[[blocks]]
+id = "panel"
+title = "dev"
+icon = "layers"
+
